@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TopicController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\LikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,4 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/comments/{comment}', [CommentController::class, 'show']);
     Route::put('/comments/{comment}', [CommentController::class, 'update']);
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+
+    // Likes
+    Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
 });

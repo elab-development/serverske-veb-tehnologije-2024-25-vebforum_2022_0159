@@ -44,7 +44,8 @@ class PostController extends Controller
     public function show(Post $post)
     {
         return response()->json(
-            $post->load(['user', 'topic', 'comments.user', 'attachment'])->loadCount('likes')
+            $post->load(['user', 'topic', 'comments.user', 'attachment'])
+                ->loadCount(['likes', 'comments'])
         );
     }
 

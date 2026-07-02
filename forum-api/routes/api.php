@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\TopicController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\LikeController;
+use App\Http\Controllers\Api\AttachmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,4 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Likes
     Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
+
+    // Attachments
+    Route::post('/posts/{post}/attachment', [AttachmentController::class, 'store']);
+    Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy']);
+    Route::get('/posts/{post}/attachment', [AttachmentController::class, 'show']);
 });

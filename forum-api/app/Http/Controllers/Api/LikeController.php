@@ -34,4 +34,17 @@ class LikeController extends Controller
             'likes_count' => $post->likes()->count(),
         ], 201);
     }
+
+    public function index(Post $post)
+    {
+        $likes = $post->likes()
+            ->with('user:id,name,username,email')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'likes_count' => $likes->count(),
+            'users' => $likes->pluck('user'),
+        ]);
+    }
 }

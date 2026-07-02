@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Likes
     Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
+    Route::get('/posts/{post}/likes', [LikeController::class, 'index']);
+    Route::post('/posts/{post}/like', [LikeController::class, 'toggle']);
 
     // Attachments
     Route::post('/posts/{post}/attachment', [AttachmentController::class, 'store']);

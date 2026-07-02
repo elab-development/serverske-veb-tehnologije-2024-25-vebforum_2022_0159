@@ -37,7 +37,7 @@ class AttachmentController extends Controller
             'file_size' => $file->getSize(),
         ]);
 
-        return response()->json($attachment, 201);
+        return response()->json($this->formatAttachment($attachment), 201);
     }
 
     public function destroy(Request $request, Attachment $attachment)
@@ -63,6 +63,21 @@ class AttachmentController extends Controller
             ], 404);
         }
 
-        return response()->json($post->attachment);
+        return response()->json($this->formatAttachment($post->attachment));
+    }
+
+    private function formatAttachment($attachment)
+    {
+        return [
+            'id' => $attachment->id,
+            'post_id' => $attachment->post_id,
+            'file_name' => $attachment->file_name,
+            'file_path' => $attachment->file_path,
+            'file_type' => $attachment->file_type,
+            'file_size' => $attachment->file_size,
+            'file_url' => asset('storage/' . $attachment->file_path),
+            'created_at' => $attachment->created_at,
+            'updated_at' => $attachment->updated_at,
+        ];
     }
 }

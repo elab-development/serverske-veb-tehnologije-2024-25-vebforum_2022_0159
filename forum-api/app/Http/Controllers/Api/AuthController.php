@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -18,6 +19,33 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ]);
+
+        //API EMAIL VALIDATION PROVERA
+
+        $response = Http::get('https://emailreputation.abstractapi.com/v1/', [
+            'api_key' => config('services.abstract.api_key'),
+            'email' => $data['email'],
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Email reputation service is unavailable.'
+            ], 503);
+        }
+
+        $emailData = $response->json();
+
+        if (
+            ($emailData['email_deliverability']['status'] ?? null) !== 'deliverable' ||
+            ($emailData['email_quality']['is_disposable'] ?? false) === true ||
+            ($emailData['email_quality']['is_username_suspicious'] ?? false) === true ||
+            ($emailData['email_risk']['address_risk_status'] ?? null) === 'high' ||
+            ($emailData['email_risk']['domain_risk_status'] ?? null) === 'high'
+        ) {
+            return response()->json([
+                'message' => 'This email address cannot be used for registration.'
+            ], 422);
+        }
 
         $user = User::create([
             ...$data,

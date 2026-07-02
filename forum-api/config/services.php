@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'abstract' => [
+        'api_key' => env('ABSTRACT_API_KEY'),
+    ],
+
 ];

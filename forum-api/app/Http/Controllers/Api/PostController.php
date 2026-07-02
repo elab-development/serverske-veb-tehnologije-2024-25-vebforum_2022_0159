@@ -70,7 +70,11 @@ class PostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        if ($request->user()->id !== $post->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $post->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -85,7 +89,11 @@ class PostController extends Controller
 
     public function destroy(Request $request, Post $post)
     {
-        if ($request->user()->id !== $post->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $post->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 

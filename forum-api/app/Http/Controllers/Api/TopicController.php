@@ -69,7 +69,11 @@ class TopicController extends Controller
 
     public function update(Request $request, Topic $topic)
     {
-        if ($request->user()->id !== $topic->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $topic->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -85,10 +89,13 @@ class TopicController extends Controller
 
     public function destroy(Request $request, Topic $topic)
     {
-        if ($request->user()->id !== $topic->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $topic->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
-
         $topic->delete();
 
         return response()->json(['message' => 'Topic deleted successfully.']);

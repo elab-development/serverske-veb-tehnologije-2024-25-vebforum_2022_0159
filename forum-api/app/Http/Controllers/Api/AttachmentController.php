@@ -12,7 +12,11 @@ class AttachmentController extends Controller
 {
     public function store(Request $request, Post $post)
     {
-        if ($request->user()->id !== $post->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $post->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -44,7 +48,11 @@ class AttachmentController extends Controller
     {
         $post = $attachment->post;
 
-        if ($request->user()->id !== $post->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $post->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 

@@ -62,7 +62,11 @@ class CommentController extends Controller
 
     public function update(Request $request, Comment $comment)
     {
-        if ($request->user()->id !== $comment->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $comment->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
@@ -77,7 +81,11 @@ class CommentController extends Controller
 
     public function destroy(Request $request, Comment $comment)
     {
-        if ($request->user()->id !== $comment->user_id && $request->user()->role !== 'moderator') {
+        if (
+            $request->user()->id !== $comment->user_id &&
+            !$request->user()->isModerator() &&
+            !$request->user()->isAdmin()
+        ) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 

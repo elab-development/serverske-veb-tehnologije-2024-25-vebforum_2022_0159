@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\AttachmentController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,4 +67,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts/{post}/attachment', [AttachmentController::class, 'store']);
     Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy']);
     Route::get('/posts/{post}/attachment', [AttachmentController::class, 'show']);
+
+    // Admin - Users
+    Route::get('/users', [UserController::class, 'index']);
+    Route::patch('/users/{user}/role', [UserController::class, 'updateRole']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });

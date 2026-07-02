@@ -35,12 +35,11 @@ class AuthController extends Controller
 
         $emailData = $response->json();
 
+
         if (
             ($emailData['email_deliverability']['status'] ?? null) !== 'deliverable' ||
             ($emailData['email_quality']['is_disposable'] ?? false) === true ||
-            ($emailData['email_quality']['is_username_suspicious'] ?? false) === true ||
-            ($emailData['email_risk']['address_risk_status'] ?? null) === 'high' ||
-            ($emailData['email_risk']['domain_risk_status'] ?? null) === 'high'
+            ($emailData['email_quality']['is_username_suspicious'] ?? false) === true
         ) {
             return response()->json([
                 'message' => 'This email address cannot be used for registration.'

@@ -55,4 +55,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === 'moderator';
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
 }

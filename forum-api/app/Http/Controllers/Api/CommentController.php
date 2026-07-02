@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class CommentController extends Controller
 {
@@ -24,6 +25,24 @@ class CommentController extends Controller
         $data = $request->validate([
             'content' => 'required|string',
         ]);
+
+        //API
+
+        $response = Http::get('https://www.purgomalum.com/service/containsprofanity', [
+            'text' => $data['content'],
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Profanity check service is unavailable.'
+            ], 503);
+        }
+
+        if ($response->body() === 'true') {
+            return response()->json([
+                'message' => 'Content contains inappropriate language.'
+            ], 422);
+        }
 
         $comment = Comment::create([
             'post_id' => $post->id,

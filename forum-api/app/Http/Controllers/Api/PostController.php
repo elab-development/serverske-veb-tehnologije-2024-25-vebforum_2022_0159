@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PostController extends Controller
 {
@@ -31,6 +32,24 @@ class PostController extends Controller
         $data = $request->validate([
             'content' => 'required|string',
         ]);
+
+        //API
+
+        $response = Http::get('https://www.purgomalum.com/service/containsprofanity', [
+            'text' => $data['content'],
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Profanity check service is unavailable.'
+            ], 503);
+        }
+
+        if ($response->body() === 'true') {
+            return response()->json([
+                'message' => 'Content contains inappropriate language.'
+            ], 422);
+        }
 
         $post = Post::create([
             'topic_id' => $topic->id,
